@@ -17,6 +17,9 @@ module.exports = function(grunt) {
         output = '',
         JSTpath = path.dirname(src) + '/' + path.basename(src, '.eco');
 
+    // dirty Gee Hack!
+    JSTpath = JSTpath.replace(/app\/scripts\/views\//, '')
+
     if (input.length < 1) {
       if (options.emptyWarning) {
         grunt.log.warn('Template ' + src.cyan + ' not compiled because file is empty.');
@@ -75,15 +78,18 @@ module.exports = function(grunt) {
       srcFiles.forEach(function(src) {
         var res = compile(src, options);
 
+        // Gee Hack!
         if (res) {
-          compiled.push(res);
+          // compiled.push(res);
+          grunt.file.write(src.replace(/^app/, '.tmp') + '.js', res);
         }
       });
 
-      if (compiled.length) {
-        grunt.file.write(destFile, compiled.join(grunt.util.normalizelf(grunt.util.linefeed)));
-        grunt.log.writeln('File ' + destFile.cyan + ' created.');
-      }
+      // Gee Hack!
+      // if (compiled.length) {
+      //   grunt.file.write(destFile, compiled.join(grunt.util.normalizelf(grunt.util.linefeed)));
+      //   grunt.log.writeln('File ' + destFile.cyan + ' created.');
+      // }
     });
 
   });
